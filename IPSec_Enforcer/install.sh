@@ -13,7 +13,8 @@ function install_dep {
     apt-get -y --force-yes install python-dev
     apt-get -y --force-yes install libldap2-dev
     apt-get -y --force-yes install libsasl2-dev
-    apt-get -y --force-yes install libssl-dev 
+    apt-get -y --force-yes install libssl-dev
+    apt-get -y install build-essential libgmp-dev libunbound-dev libldns-dev
 	echo "Installing required linux packages...done"
 
 	echo "Fetching Strongswan 5.3.5..."

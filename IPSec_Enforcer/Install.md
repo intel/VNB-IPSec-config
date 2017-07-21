@@ -13,7 +13,15 @@
     `apt-get -y --force-yes install libldap2-dev`
     `apt-get -y --force-yes install libsasl2-dev`
     `apt-get -y --force-yes install libssl-dev`
-    `apt-get -y --force-yes install strongswan`
+    `apt-get -y install build-essential libgmp-dev libunbound-dev libldns-dev`
+    `wget --no-check-certificate https://download.strongswan.org/strongswan-5.3.5.tar.gz`
+    `tar -xvzf strongswan-5.3.5.tar.gz`
+    `rm -rf strongswan-5.3.5.tar.gz`
+    `cd strongswan-5.3.5/`
+    `./configure --prefix=/usr --sysconfdir=/etc`
+    `make`
+    `sudo make install`
+    `sudo ipsec start`
     `pip install -r requirements_ipsecenforcer.txt`
 
 ## Configure IPsec Enforcer
