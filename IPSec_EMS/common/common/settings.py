@@ -71,7 +71,7 @@ ROOT_URLCONF = 'common.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['static/templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'static/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -144,7 +144,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': 'logs/ipsecems.log',
+            'filename': os.path.join(BASE_DIR, 'logs/ipsecems.log'),
             'formatter': 'verbose'
         },
         'console': {

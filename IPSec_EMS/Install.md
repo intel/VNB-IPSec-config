@@ -34,6 +34,39 @@
     mkdir -p consul.d
 ```
 
+4.  Change permission of log folder
+```
+    sudo chown :www-data -R common/logs
+```
+
+5.  Install Apache web server and Apache wsgi module.
+```
+    sudo -E apt-get -y install apache2 libapache2-mod-wsgi
+```
+
+6.  Configure SSL related Apache configurations.
+```
+    sudo cp apache_configurations/apache2.conf /etc/apache2/apache2.conf
+    sudo sed -i -e 's-${PROJECT_ROOT}-'"$current_dir"'-g' /etc/apache2/apache2.conf
+    sudo cp apache_configurations/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
+    sudo sed -i -e 's-${PROJECT_ROOT}-'"$current_dir"'-g' /etc/apache2/sites-available/default-ssl.conf
+    sudo sed -i -e 's-${CERT_PATH}-'"$cert_path"'-g' /etc/apache2/sites-available/default-ssl.conf
+```
+
+7. Configure HTTP related configurations for Apache web server.
+```
+    sudo cp apache_configurations/000-default.conf /etc/apache2/sites-available/000-default.conf
+    sudo sed -i -e 's-${PROJECT_ROOT}-'"$current_dir"'-g' /etc/apache2/sites-available/000-default.conf
+```
+
+8. Enable Apache web server.
+```
+   sudo a2enmod wsgi
+   sudo a2enmod ssl
+   sudo a2ensite default-ssl
+   sudo service apache2 restart
+```
+
 Run IPsec EMS Server
 --------------------
 
@@ -55,7 +88,6 @@ Run IPsec EMS Server
     with **RBAC** server and server GUI pages to user.
 ```    
     cd <repo_name>/common/
-    nohup python manage.py runserver 0.0.0.0:8000 &
     nohup python manage.py healthcheck &
     nohup python manage.py ipsecenforcernotify &
     nohup python manage.py rbacregister &
