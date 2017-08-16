@@ -22,7 +22,14 @@
     `make`
     `sudo make install`
     `sudo ipsec start`
-    `pip install -r requirements_ipsecenforcer.txt`
+    `sudo -E pip install -r requirements_ipsecenforcer.txt`
+    `sudo -E pip install pyOpenSSL ndg-httpsclient pyasn1`
+
+2.   Create appropriate directories for client side certificates which are used by IPsec Enforcer to communicate with IPsec EMS.
+```
+    sudo mkdir -p /opt/ipsec_enforcer/certificates
+    sudo chmod 777 /opt/ipsec_enforcer/certificates
+```
 
 ## Configure IPsec Enforcer
 ------------------------

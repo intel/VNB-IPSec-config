@@ -9,7 +9,7 @@ function install_dep {
     	echo "Installing dependencies..."
 	echo "Installing required linux packages..."
     	# Install dependencies for SecMon EMS server
-    	sudo -E apt-get -y --force-yes install python-pip 
+    	sudo -E apt-get -y --force-yes install python-pip
     	sudo -E apt-get -y --force-yes install python-dev
     	sudo -E apt-get -y --force-yes install libldap2-dev
     	sudo -E apt-get -y --force-yes install libsasl2-dev
@@ -36,9 +36,15 @@ function install_dep {
 
 	echo "Installing required python packages..."
 	cd $current_dir
-    	sudo -E pip install -r requirements_ipsecenforcer.txt
+    sudo -E pip install -r requirements_ipsecenforcer.txt
+	sudo -E pip install pyOpenSSL ndg-httpsclient pyasn1
 	echo "Installing required python packages...done"
 	echo "Installing dependencies...done"
+
+	echo "Create directories for certificates..."
+	sudo mkdir -p /opt/ipsec_enforcer/certificates
+	sudo chmod 777 /opt/ipsec_enforcer/certificates
+	echo "Create directories for certificates...done"
 }
 
 function configure_ipsecenforcer {
@@ -54,35 +60,35 @@ function configure_ipsecenforcer {
     	then
     	    echo -n "Enter group name: "
     	    read name
-    	    echo "NAME_AND_TYPE = ($name, group)" >> $CONFIG_FILE 
+    	    echo "NAME_AND_TYPE = ($name, group)" >> $CONFIG_FILE
     	elif [ $choice == "local" ]
     	then
     	    echo -n "Enter localsite name: "
     	    read name
-    	    echo "NAME_AND_TYPE = ($name, localsite)" >> $CONFIG_FILE 
+    	    echo "NAME_AND_TYPE = ($name, localsite)" >> $CONFIG_FILE
     	else
     	    echo "invalid option"
     	fi
-    	
-    	echo "" >> $CONFIG_FILE    
+
+    	echo "" >> $CONFIG_FILE
     	echo "[INTERFACE]" >> $CONFIG_FILE
 
     	echo -n "IPsec Tunnel Interface (ethX): "
     	read tun_intf
     	echo "IPSEC_TUNNEL_INTERFACE = $tun_intf" >> $CONFIG_FILE
-    	
+
     	echo -n "IPsec EMS Interface (ethX): "
     	read ems_intf
     	echo "IPSEC_EMS_INTERFACE = $ems_intf" >> $CONFIG_FILE
 
-    	echo "" >> $CONFIG_FILE    
+    	echo "" >> $CONFIG_FILE
     	echo "[IPSEC_EMS_CONTROLLER]" >> $CONFIG_FILE
     	echo -n "IPsec EMS Controller address with port: "
     	read ems_ip
-    	
+
     	echo "IP_ADDRESS_WITH_PORT = $ems_ip" >> $CONFIG_FILE
     	echo "" >> $CONFIG_FILE
-    	
+
     	echo "[IPSEC_EMS]" >> $CONFIG_FILE
     	echo "IP_ADDRESS_WITH_PORT = $ems_ip" >> $CONFIG_FILE
 	echo "Configuring IPsec Enforcer...done"

@@ -55,11 +55,13 @@ class IPsecEnforcerAgent(object):
         IPSEC_EMS_FQDN_DEQUE = IPSEC_EMS_CONTROLLER_FQDN_DEQUE
         ipsec_enforcer = IPsecEnforcer()
         ipsec_enforcer_socket = Listener(('localhost', 8081))
+        certificate_location = '/opt/ipsec_enforcer/certificates'
+
         while True:
-            registration_uri = ('http://' + IPSEC_EMS_FQDN_DEQUE[0] + '/' +
+            registration_uri = ('https://' + IPSEC_EMS_FQDN_DEQUE[0] + '/' +
                                 IPSEC_EMS_REGISTRATION + '/')
             data = json.dumps(ipsec_enforcer.__dict__)
-            response = requests.post(registration_uri, data=data)
+            response = requests.post(registration_uri, data=data, verify=certificate_location + '/ca.cert', cert=(certificate_location + '/client.cert', certificate_location + '/client.key'))
             if response.status_code == requests.codes.created:
                 IPSEC_ENFORCER_ID = response.json()['id']
                 break
@@ -68,10 +70,10 @@ class IPsecEnforcerAgent(object):
                 time.sleep(30)
 
         while True:
-            registration_uri = ('http://' + IPSEC_EMS_FQDN_DEQUE[0] + '/' +
+            registration_uri = ('https://' + IPSEC_EMS_FQDN_DEQUE[0] + '/' +
                                 IPSEC_EMS_POLICY_CONFIG + '/' +
                                 IPSEC_ENFORCER_ID + '/')
-            response = requests.get(registration_uri)
+            response = requests.get(registration_uri, verify=certificate_location + '/ca.cert', cert=(certificate_location + '/client.cert', certificate_location + '/client.key'))
 
             if response.status_code == requests.codes.ok:
                 response = response.json()
